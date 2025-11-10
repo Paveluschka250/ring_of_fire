@@ -12,6 +12,11 @@
       src="/assets/img/cards/card_cover.png"
     />
     <img
+      *ngFor="let card of game.playedCards"
+      class="played-card"
+      src="/assets/img/cards/{{ card }}.png"
+    />
+    <img
       (click)="takeCard()"
       *ngIf="pickCardAnimation"
       class="pick-card"
