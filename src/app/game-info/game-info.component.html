@@ -1,4 +1,4 @@
 <mat-card>
-  <mat-card-title>{{ title }}</mat-card-title>
-  <mat-card-content>{{ description }}</mat-card-content>
+  <mat-card-title>{{ card ? title : 'Bitte Karte ziehen' }}</mat-card-title>
+  <mat-card-content>{{ card ? description : 'Drücke auf die Karte um die Regel zu sehen' }}</mat-card-content>
 </mat-card>
