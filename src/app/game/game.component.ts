@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-game',
@@ -13,7 +14,7 @@ export class GameComponent implements OnInit {
   currentCard: string = '';
   game: Game = new Game();
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.newGame();
@@ -25,11 +26,24 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
+    if (this.game.players.length < 2) {
+      this.snackBar.open('Bitte füge mindestens zwei Spieler hinzu.', 'OK', {
+        duration: 2500,
+      });
+      return;
+    }
+
+    if (this.game.stack.length === 0) {
+      return;
+    }
+
     if (!this.pickCardAnimation) {
       this.currentCard = this.game.stack.pop() as string;
       this.pickCardAnimation = true;
-      this.game.currentPlayer++;
-      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+
+      this.game.currentPlayer =
+        (this.game.currentPlayer + 1) % this.game.players.length;
+
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
         this.pickCardAnimation = false;
