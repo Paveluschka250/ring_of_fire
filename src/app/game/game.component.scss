@@ -54,7 +54,8 @@
 
 .player-position {
   position: absolute;
-  right: 0;
+  right: clamp(12px, 4vw, 36px);
+  max-width: calc(100vw - clamp(12px, 4vw, 36px) - 16px);
 }
 
 .add-button {
