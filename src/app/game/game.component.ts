@@ -15,6 +15,7 @@ export class GameComponent implements OnInit {
   pickCardAnimation = false;
   currentCard: string = '';
   game: Game = new Game();
+  gameId: string = '';
 
   constructor(
     public dialog: MatDialog,
@@ -27,10 +28,10 @@ export class GameComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const gameId = params['id'];
       console.log('Game ID:', gameId);
-      
+      this.gameId = params['id'];
       this.firestore
         .collection('games')
-        .doc(gameId)
+        .doc(this.gameId)
         .valueChanges()
         .subscribe((game: any) => {
           console.log('Game from Firebase:', game);
@@ -63,6 +64,7 @@ export class GameComponent implements OnInit {
     if (!this.pickCardAnimation) {
       this.currentCard = this.game.stack.pop() as string;
       this.pickCardAnimation = true;
+      this.saveGame();
 
       this.game.currentPlayer =
         (this.game.currentPlayer + 1) % this.game.players.length;
@@ -70,6 +72,7 @@ export class GameComponent implements OnInit {
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
         this.pickCardAnimation = false;
+        this.saveGame();
       }, 1250);
     }
   }
@@ -80,7 +83,15 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((playerName: string) => {
       if (playerName && playerName.length > 0) {
         this.game.players.push(playerName);
+        this.saveGame();
       }
     });
+  }
+
+  saveGame() {
+    this.firestore
+      .collection('games')
+      .doc(this.gameId)
+      .update(this.game.toJson());
   }
 }
