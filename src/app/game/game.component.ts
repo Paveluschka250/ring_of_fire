@@ -3,6 +3,7 @@ import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-game',
@@ -14,15 +15,27 @@ export class GameComponent implements OnInit {
   currentCard: string = '';
   game: Game = new Game();
 
-  constructor(public dialog: MatDialog, private snackBar: MatSnackBar) {}
+  constructor(
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private firestore: AngularFirestore
+  ) {}
 
   ngOnInit(): void {
     this.newGame();
+    this.firestore
+    .collection('games')
+    .valueChanges()
+    .subscribe((game) => {
+      console.log(game,'game from firebase');
+    })  ;
   }
 
   newGame() {
     this.game = new Game();
-    console.log(this.game);
+    this.firestore
+    .collection('games')
+    .add(this.game.toJson())
   }
 
   takeCard() {
