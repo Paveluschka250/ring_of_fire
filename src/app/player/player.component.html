@@ -1,4 +1,7 @@
 <div class="player" [class.player-active]="playerActive">
+    <span class="drag-handle" cdkDragHandle (click)="$event.stopPropagation()">
+      <mat-icon>drag_indicator</mat-icon>
+    </span>
     <img src="assets/img/profil.png" alt="player" class="player-img">
     <span>{{ name }}</span>
 </div>

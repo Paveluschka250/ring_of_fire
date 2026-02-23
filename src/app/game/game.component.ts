@@ -2,9 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
+import {
+  DialogEditPlayerComponent,
+  EditPlayerResult,
+} from '../dialog-edit-player/dialog-edit-player.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ActivatedRoute } from '@angular/router';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-game',
@@ -86,6 +91,54 @@ export class GameComponent implements OnInit {
         this.saveGame();
       }
     });
+  }
+
+  openEditDialog(index: number): void {
+    const config: MatDialogConfig = {
+      data: { name: this.game.players[index] },
+      autoFocus: true,
+      restoreFocus: true,
+    };
+    const dialogRef = this.dialog.open(DialogEditPlayerComponent, config);
+
+    dialogRef.afterClosed().subscribe((result: EditPlayerResult | undefined) => {
+      if (!result) return;
+      if (result.action === 'save' && result.name) {
+        this.game.players[index] = result.name;
+        this.saveGame();
+      } else if (result.action === 'delete') {
+        this.game.players.splice(index, 1);
+        if (index < this.game.currentPlayer) {
+          this.game.currentPlayer--;
+        } else if (index === this.game.currentPlayer && this.game.currentPlayer >= this.game.players.length) {
+          this.game.currentPlayer = 0;
+        }
+        if (this.game.currentPlayer >= this.game.players.length) {
+          this.game.currentPlayer = 0;
+        }
+        this.saveGame();
+      }
+    });
+  }
+
+  dropPlayer(event: CdkDragDrop<string[]>): void {
+    moveItemInArray(this.game.players, event.previousIndex, event.currentIndex);
+    const previousCurrent = event.previousIndex;
+    const newCurrent = event.currentIndex;
+    if (this.game.currentPlayer === previousCurrent) {
+      this.game.currentPlayer = newCurrent;
+    } else if (
+      previousCurrent < this.game.currentPlayer &&
+      newCurrent >= this.game.currentPlayer
+    ) {
+      this.game.currentPlayer--;
+    } else if (
+      previousCurrent > this.game.currentPlayer &&
+      newCurrent <= this.game.currentPlayer
+    ) {
+      this.game.currentPlayer++;
+    }
+    this.saveGame();
   }
 
   saveGame() {

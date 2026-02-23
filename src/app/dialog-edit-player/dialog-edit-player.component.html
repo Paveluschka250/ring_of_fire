@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Spieler bearbeiten</h1>
+<div mat-dialog-content>
+  <p>Name ändern oder Spieler entfernen</p>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Spielername</mat-label>
+    <input matInput [(ngModel)]="playerName" cdkFocusInitial />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button color="warn" (click)="onDelete()">
+    <mat-icon>delete</mat-icon>
+    Löschen
+  </button>
+  <button mat-button (click)="onCancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" [disabled]="playerName.trim().length === 0" (click)="onSave()">
+    Speichern
+  </button>
+</div>

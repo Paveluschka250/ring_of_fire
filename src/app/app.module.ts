@@ -10,7 +10,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddPlayerComponent } from './dialog-add-player/dialog-add-player.component';
+import { DialogEditPlayerComponent } from './dialog-edit-player/dialog-edit-player.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +30,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     GameComponent,
     PlayerComponent,
     DialogAddPlayerComponent,
+    DialogEditPlayerComponent,
     GameInfoComponent,
   ],
   imports: [
@@ -44,6 +47,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     FormsModule,
     MatCardModule,
     MatSnackBarModule,
+    DragDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
