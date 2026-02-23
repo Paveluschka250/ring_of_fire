@@ -37,6 +37,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/MyProjects/ring_of_fire/",
               "budgets": [
                 {
                   "type": "initial",
