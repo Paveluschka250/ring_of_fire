@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Erlaubt Lese- und Schreibzugriff auf die Collection "games"
+    // Für Entwicklung: alle Zugriffe erlauben
+    // Für Production: später mit Auth einschränken
+    match /games/{gameId} {
+      allow read, write: if true;
+    }
+  }
+}

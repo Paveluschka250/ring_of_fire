@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/models/game';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -25,14 +25,12 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const gameId = params['id'];
-      console.log('Game ID:', gameId);
       this.gameId = params['id'];
       this.firestore
         .collection('games')
         .doc(this.gameId)
         .valueChanges()
         .subscribe((game: any) => {
-          console.log('Game from Firebase:', game);
           if (game) {
             this.game.currentPlayer = game.currentPlayer;
             this.game.playedCards = game.playedCards;
@@ -76,7 +74,11 @@ export class GameComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogAddPlayerComponent);
+    const config: MatDialogConfig = {
+      autoFocus: true,
+      restoreFocus: true,
+    };
+    const dialogRef = this.dialog.open(DialogAddPlayerComponent, config);
 
     dialogRef.afterClosed().subscribe((playerName: string) => {
       if (playerName && playerName.length > 0) {
